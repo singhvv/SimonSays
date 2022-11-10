@@ -1,1 +1,165 @@
+import random, time, pygame
+from pygame.locals import *
 
+
+
+FPS = 30
+WINDOWWIDTH = 700
+WINDOWHEIGHT = 700
+FLASHSPEED = 200
+FLASHDELAY = 200
+TILESIZE = 220
+TILEGAPSIZE = 30
+TIMEOUT = 4
+
+
+WHITE        = (255, 255, 255)
+BLACK        = (  0,   0,   0)
+BRIGHTRED    = (255,   0,   0)
+RED          = (100,   0,   0)
+BRIGHTGREEN  = (  0, 255,   0)
+GREEN        = (  0, 100,   0)
+BRIGHTBLUE   = (  0,   0, 255)
+BLUE         = (  0,   0, 100)
+BRIGHTYELLOW = (255, 255,   0)
+YELLOW       = (100, 100,   0)
+GREY         = (100,  100,  100)
+bgColor = BLACK
+
+XMARGIN = int((WINDOWWIDTH - (2 * TILESIZE) - TILEGAPSIZE) / 2)
+YMARGIN = int((WINDOWHEIGHT - (2 * TILESIZE) - TILEGAPSIZE) / 2)
+
+# Creating rectangular objects for four tiles
+YELLOWRECTANGLE = pygame.Rect(XMARGIN, YMARGIN, TILESIZE, TILESIZE)
+BLUERECTANGLE   = pygame.Rect(XMARGIN + TILESIZE + TILEGAPSIZE, YMARGIN, TILESIZE, TILESIZE)
+REDRECTANGLE    = pygame.Rect(XMARGIN, YMARGIN + TILESIZE + TILEGAPSIZE, TILESIZE, TILESIZE)
+GREENRECTANGLE  = pygame.Rect(XMARGIN + TILESIZE + TILEGAPSIZE, YMARGIN + TILESIZE + TILEGAPSIZE, TILESIZE, TILESIZE)
+
+
+
+
+def main():
+    global FPSCLOCK, DISPLAYSURF, FONT, BEEP1, BEEP2, BEEP3, BEEP4
+
+    pygame.init()
+    FPSCLOCK = pygame.time.Clock()
+    DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
+    pygame.display.set_caption('SimonSays')
+
+    FONT = pygame.font.Font('freesansbold.ttf', 14)
+    infoSurf = FONT.render('Repeat the pattern shown by the tiles', 1, GREY)
+    infoRect = infoSurf.get_rect()
+    infoRect.topleft = (10, WINDOWHEIGHT - 25)
+
+    # Loading the beeps
+    BEEP1 = pygame.mixer.Sound('beep1.wav')
+    BEEP2 = pygame.mixer.Sound('beep2.wav')
+    BEEP3 = pygame.mixer.Sound('beep3.wav')
+    BEEP4 = pygame.mixer.Sound('beep4.wav')
+
+    # Start game with variables
+    pattern = [] # Array will store colour patterns for tiles
+    currentStep = 0 # Next colour that must be pressed by Player
+    lastClickTime = 0 # Last button press timestamp
+    score = 0
+    waitingForInput = False # When this is False, the pattern is going on.
+    # When this is True, tha game is waiting for the player to click a button:
+
+    while True: # Gameplay
+        clickedButton = None # Button clicked by player (Valid values are YELLOW, RED, GREEN, or BLUE)
+        DISPLAYSURF.fill(bgColor)
+        makeTiles()
+
+        scoreSurf = FONT.render('Score: ' + str(score), 1, WHITE)
+        scoreRect = scoreSurf.get_rect()
+        scoreRect.topleft = (WINDOWWIDTH - 100, 10)
+        DISPLAYSURF.blit(scoreSurf, scoreRect)
+
+        DISPLAYSURF.blit(infoSurf, infoRect)
+
+        QuitTrue()
+        for event in pygame.event.get(): # event handling
+            if event.type == MOUSEBUTTONUP:
+                mousex, mousey = event.pos
+                clickedButton = getClick(mousex, mousey)
+            elif event.type == KEYDOWN:
+                if event.key == K_q:
+                    clickedButton = YELLOW
+                elif event.key == K_w:
+                    clickedButton = BLUE
+                elif event.key == K_a:
+                    clickedButton = RED
+                elif event.key == K_s:
+                    clickedButton = GREEN
+
+
+
+        if not waitingForInput:
+            # Making pattern
+            pygame.display.update()
+            pygame.time.wait(500)
+            pattern.append(random.choice((YELLOW, BLUE, RED, GREEN)))
+            for button in pattern:
+                flashButtonAnimation(button)
+                pygame.time.wait(FLASHDELAY)
+            waitingForInput = True
+        else:
+            # Waiting for Player to enter buttons
+            if clickedButton and clickedButton == pattern[currentStep]:
+                # Case: Correct button pressed
+                flashButtonAnimation(clickedButton)
+                currentStep += 1
+                lastClickTime = time.time()
+
+                if currentStep == len(pattern):
+                    # Last button in pattern pressed
+                    changeBackgroundAnimation()
+                    score += 1
+                    waitingForInput = False
+                    currentStep = 0 # Reset to first step
+
+            elif (clickedButton and clickedButton != pattern[currentStep]) or (currentStep != 0 and time.time() - TIMEOUT > lastClickTime):
+                # Pushed incorrect button or timeout
+                gameOverAnimation()
+                # Reset variables for new game:
+                pattern = []
+                currentStep = 0
+                waitingForInput = False
+                score = 0
+                pygame.time.wait(1000)
+                changeBackgroundAnimation()
+
+        pygame.display.update()
+        FPSCLOCK.tick(FPS)
+
+
+
+
+def makeTiles():
+    # print ("not defined")
+    a = 5
+
+def QuitTrue():
+    # print ("notdefined")
+    a = 5
+
+def getClick(mousex, mousey):
+    # print ("notdefined")
+    a = 5
+
+def flashButtonAnimation(button):
+    # print ("notdefined")
+    a = 5
+
+def changeBackgroundAnimation():
+    # print ("notdefined")
+    a = 5
+
+def gameOverAnimation():
+    # print ("notdefined")
+    a = 5
+
+
+
+if __name__ == '__main__':
+    main()
