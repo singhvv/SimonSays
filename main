@@ -1,7 +1,5 @@
-import random, time, pygame
+import random, time, pygame, sys
 from pygame.locals import *
-
-
 
 FPS = 30
 WINDOWWIDTH = 700
@@ -39,7 +37,7 @@ GREENRECTANGLE  = pygame.Rect(XMARGIN + TILESIZE + TILEGAPSIZE, YMARGIN + TILESI
 
 
 def main():
-    global FPSCLOCK, DISPLAYSURF, FONT, BEEP1, BEEP2, BEEP3, BEEP4
+    global FPSCLOCK, DISPLAYSURF, FONT, BEEP1, BEEP2, BEEP3, BEEP4, GAMEOVER
 
     pygame.init()
     FPSCLOCK = pygame.time.Clock()
@@ -56,6 +54,7 @@ def main():
     BEEP2 = pygame.mixer.Sound('beep2.wav')
     BEEP3 = pygame.mixer.Sound('beep3.wav')
     BEEP4 = pygame.mixer.Sound('beep4.wav')
+    GAMEOVER = pygame.mixer.Sound('gameover.wav')
 
     # Start game with variables
     pattern = [] # Array will store colour patterns for tiles
@@ -136,16 +135,29 @@ def main():
 
 
 def makeTiles():
-    # print ("not defined")
-    a = 5
+    pygame.draw.rect(DISPLAYSURF, YELLOW, YELLOWRECTANGLE)
+    pygame.draw.rect(DISPLAYSURF, BLUE, BLUERECTANGLE)
+    pygame.draw.rect(DISPLAYSURF, RED, REDRECTANGLE)
+    pygame.draw.rect(DISPLAYSURF, GREEN, GREENRECTANGLE)
 
 def QuitTrue():
-    # print ("notdefined")
-    a = 5
+    for event in pygame.event.get(QUIT): # Check all quitting events
+        terminate() # If any quitting events are found, terminate() is called
+    for event in pygame.event.get(KEYUP): # get all KEYUP events
+        if event.key == K_ESCAPE:
+            terminate() # Call terminate() if the KEYUP event was for Esc key
+        pygame.event.post(event) # Put other KEYUP event objects back
 
-def getClick(mousex, mousey):
-    # print ("notdefined")
-    a = 5
+def getClick(x, y):
+    if YELLOWRECTANGLE.collidepoint( (x, y) ):
+        return YELLOW
+    elif BLUERECTANGLE.collidepoint( (x, y) ):
+        return BLUE
+    elif REDRECTANGLE.collidepoint( (x, y) ):
+        return RED
+    elif GREENRECTANGLE.collidepoint( (x, y) ):
+        return GREEN
+    return None
 
 def flashButtonAnimation(button):
     # print ("notdefined")
@@ -156,8 +168,14 @@ def changeBackgroundAnimation():
     a = 5
 
 def gameOverAnimation():
-    # print ("notdefined")
-    a = 5
+    origSurf = DISPLAYSURF.copy()
+    flashSurf = pygame.Surface(DISPLAYSURF.get_size())
+    flashSurf = flashSurf.convert_alpha()
+    GAMEOVER.play()
+
+def terminate():
+    pygame.quit()
+    sys.exit()
 
 
 
