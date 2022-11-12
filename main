@@ -159,9 +159,38 @@ def getClick(x, y):
         return GREEN
     return None
 
-def flashButtonAnimation(button):
-    # print ("notdefined")
-    a = 5
+def flashButtonAnimation(color, animationSpeed = 50):
+    if color == YELLOW:
+        sound = BEEP1
+        flashColor = BRIGHTYELLOW
+        rectangle = YELLOWRECTANGLE
+    elif color == BLUE:
+        sound = BEEP2
+        flashColor = BRIGHTBLUE
+        rectangle = BLUERECTANGLE
+    elif color == RED:
+        sound = BEEP3
+        flashColor = BRIGHTRED
+        rectangle = REDRECTANGLE
+    elif color == GREEN:
+        sound = BEEP4
+        flashColor = BRIGHTGREEN
+        rectangle = GREENRECTANGLE
+
+    origSurf = DISPLAYSURF.copy()
+    flashSurf = pygame.Surface((TILESIZE, TILESIZE))
+    flashSurf = flashSurf.convert_alpha()
+    r, g, b = flashColor
+    sound.play()
+    for start, end, step in ((0, 255, 1), (255, 0, -1)):
+        for alpha in range(start, end, animationSpeed * step):
+            QuitTrue()
+            DISPLAYSURF.blit(origSurf, (0, 0))
+            flashSurf.fill((r, g, b, alpha))
+            DISPLAYSURF.blit(flashSurf, rectangle.topleft)
+            pygame.display.update()
+            FPSCLOCK.tick(FPS)
+    DISPLAYSURF.blit(origSurf, (0, 0))
 
 def changeBackgroundAnimation():
     # print ("notdefined")
