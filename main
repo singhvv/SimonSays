@@ -192,9 +192,27 @@ def flashButtonAnimation(color, animationSpeed = 50):
             FPSCLOCK.tick(FPS)
     DISPLAYSURF.blit(origSurf, (0, 0))
 
-def changeBackgroundAnimation():
+def changeBackgroundAnimation(animationSpeed = 50):
     # print ("notdefined")
-    a = 5
+    global bgColor
+    newBgColor = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+
+    newBgSurf = pygame.Surface((WINDOWWIDTH, WINDOWHEIGHT))
+    newBgSurf = newBgSurf.convert_alpha()
+    r, g, b = newBgColor
+    for alpha in range(0, 255, animationSpeed): # Animation loop
+        QuitTrue()
+        DISPLAYSURF.fill(bgColor)
+
+        newBgSurf.fill((r, g, b, alpha))
+        DISPLAYSURF.blit(newBgSurf, (0, 0))
+
+        makeTiles() # Redraw the buttons on top of the tint
+
+        pygame.display.update()
+        FPSCLOCK.tick(FPS)
+    bgColor = newBgColor
+
 
 def gameOverAnimation():
     origSurf = DISPLAYSURF.copy()
