@@ -1,7 +1,7 @@
 # SimonSays
 Creating a memory game that lights up one of four squares and the player has to remember the correct order
 
-https://user-images.githubusercontent.com/117491470/236738070-961d7a83-1656-4d71-869f-9c52771f4917.mp4
+https://github.com/singhvv/SimonSays/blob/main/sounds/simonsaysgif.gif
 
 - Tiles light up in a random pattern
 - Player has to remember the order in which tiles light up
